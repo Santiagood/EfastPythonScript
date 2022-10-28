@@ -1,0 +1,4 @@
+Last EFAST river level check is on: 2022-10-28 21:20:03.883786 || river-level: 0.68 meters || river-status: Normal || date: 2022-10-28 || year: 2022 || month: October || day: 28 
+
+Last EFAST river level check is on: 2022-10-28 21:20:18.057024 || river-level: 0.68 meters || river-status: Normal || date: 2022-10-28 || year: 2022 || month: October || day: 28 
+
