@@ -1,5 +1,6 @@
 import RPi.GPIO as GPIO
 import time
+import pymysql.cursors
 from datetime import datetime
 now = datetime.now()
 
@@ -20,13 +21,15 @@ pulse_end = 0
 avgdist = 0
 
 #data that will be sent to the database
-river_level = None
+river_level  = None
 river_status = None
-river_year = None
-river_month = None
-river_day = None
-river_time = None
-river_date = None
+river_year   = None
+river_month  = None
+river_day    = None
+river_time   = None
+river_date   = None
+created_at   = None
+updated_at   = None
 
 
 timelist = []
@@ -93,7 +96,30 @@ try:
         
         #day assign
         river_day=datetime.now().strftime('%d')
-
+        
+        #created_at
+        created_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        
+        #updated_at
+        updated_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        
+        connection=pymysql.connect(
+            host='',
+            port=,
+            user='',
+            password='',
+            db='',
+            charset='',
+            cursorclass=pymysql.cursors.DictCursor)
+        
+        with connection.cursor() as cursor:
+            #create a new record
+            sql="INSERT INTO `river_levels` (`river_status`,`river_level`,`year`,`month`,`day`,`time`,`created_at`,`updated_at`,`date`) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            cursor.execute(sql, (river_status,river_level,river_year,river_month,river_day,river_time,created_at,updated_at,river_date))
+        
+        connection.commit()
+        connection.close()
+        
     else:
         print('Error reading ', avgdist, 'cm')
         meterAvgdist = avgdist / 100;
@@ -101,7 +127,7 @@ try:
 
 
     with open('/home/EfastKalumpang/EfastPythonScript/EfastLog.txt', 'a') as f:
-        f.write('Last EFAST river level check is on: {} || river-level: {} meters || river-status: {} || date: {} || year: {} || month: {} || day: {} \n\n'.format(now, river_level, river_status, river_date, river_year, river_month, river_day))
+        f.write('Last EFAST river level check is on: {} || river-level: {} meters || river-status: {} || date: {} || time: {} ||year: {} || month: {} || day: {} \n\n'.format(now, river_level, river_status, river_date, river_time, river_year, river_month, river_day))
 
     GPIO.cleanup()
     print("Done")
